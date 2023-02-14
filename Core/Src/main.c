@@ -62,10 +62,9 @@ static void MX_ADC1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-int i = 0;
-int j = 0;
-int k = 0;
+int sumvolt = 0;
 int realvolt = 0;
+int sumtemp = 0;
 int realtemp = 0;
 /* USER CODE END 0 */
 
@@ -112,32 +111,36 @@ int main(void)
 	  static uint32_t timestamp = 0;
 	  if(HAL_GetTick() >= timestamp)
 	  {
-		  timestamp = HAL_GetTick() + 0.001;
+		  timestamp = HAL_GetTick() + 1000;
 
 		  for(int i = 0; i < 20; i++)
 		  {
 			  if(i % 2 == 0)
 			  {
 				  voltage[i/2] = (adcRawData[i]*(3300/(4095.0)))*2;
-//				  i++;
-//				  j++;
+				  sumvolt += voltage[i/2];
+				  if(i == 18)
+				  {
+					  realvolt = sumvolt/10;
+				  }
+
 			  }
 			  else if(i % 2 == 1)
 			  {
 				  temperature[(i-1)/2] = (((((adcRawData[i]*(3300/(4095.0))) - 760)/2.5)+25)+273.15);
-//				  i++;
-//				  k++;
+				  sumtemp += temperature[(i-1)/2];
+				  if(i == 19)
+				  {
+					  realtemp = sumtemp/10;
+				  }
 			  }
-
 		  }
-//		  if(j == 10)
-//		  {
-			  realvolt = (voltage[0]+voltage[1]+voltage[2]+voltage[3]+voltage[4]+voltage[5]+voltage[6]+voltage[7]+voltage[8]+voltage[9])/10;
-//		  }
-//		  if(k == 10)
-//		  {
-			  realtemp = (temperature[0]+temperature[1]+temperature[2]+temperature[3]+temperature[4]+temperature[5]+temperature[6]+temperature[7]+temperature[8]+temperature[9])/10;
-//		  }
+		  sumvolt = 0;
+		  sumtemp = 0;
+
+//			  realvolt = (voltage[0]+voltage[1]+voltage[2]+voltage[3]+voltage[4]+voltage[5]+voltage[6]+voltage[7]+voltage[8]+voltage[9])/10;
+
+//			  realtemp = (temperature[0]+temperature[1]+temperature[2]+temperature[3]+temperature[4]+temperature[5]+temperature[6]+temperature[7]+temperature[8]+temperature[9])/10;
 
 	  }
 
