@@ -108,45 +108,39 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  //Call function every 0.001 milliseconds = 1Hz
-	  static uint32_t timestamp = 0;
-	  if(HAL_GetTick() >= timestamp)
-	  {
-		  timestamp = HAL_GetTick() + 0.001;
-
-		  for(int i = 0; i < 20; i++)
+		  if(i % 2 == 0)
 		  {
-			  if(i % 2 == 0)
-			  {
-				  voltage[i/2] = (adcRawData[i]*(3300/(4095.0)))*2;
-//				  i++;
-//				  j++;
-			  }
-			  else if(i % 2 == 1)
-			  {
-				  temperature[(i-1)/2] = (((((adcRawData[i]*(3300/(4095.0))) - 760)/2.5)+25)+273.15);
-//				  i++;
-//				  k++;
-			  }
-
+			  voltage[j] = (adcRawData[i]*(3300/(4095.0)))*2;
+			  i++;
+			  j++;
 		  }
-//		  if(j == 10)
-//		  {
+		  else if(i % 2 == 1)
+		  {
+			  temperature[k] = (((((adcRawData[i]*(3300/(4095.0))) - 760)/2.5)+25)+273.15);
+			  i++;
+			  k++;
+		  }
+		  if(j == 10)
+		  {
 			  realvolt = (voltage[0]+voltage[1]+voltage[2]+voltage[3]+voltage[4]+voltage[5]+voltage[6]+voltage[7]+voltage[8]+voltage[9])/10;
-//		  }
-//		  if(k == 10)
-//		  {
+		  }
+		  if(k == 10)
+		  {
 			  realtemp = (temperature[0]+temperature[1]+temperature[2]+temperature[3]+temperature[4]+temperature[5]+temperature[6]+temperature[7]+temperature[8]+temperature[9])/10;
-//		  }
-
-	  }
+		  }
+		  if(i >= 20)
+		  {
+			  i = 0;
+			  j = 0;
+			  k = 0;
+		  }
 
     /* USER CODE END WHILE */
-
+  }
     /* USER CODE BEGIN 3 */
  }
   /* USER CODE END 3 */
-}
+
 
 /**
   * @brief System Clock Configuration
